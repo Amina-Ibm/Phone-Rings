@@ -8,8 +8,8 @@ class Ringtone {
   final String username;
   final String downloadUrl;
   final Map<String, String> previews;
-  //final Map<String, String> images;
   final String analysisFrames;
+   bool isDownloaded = false;
   Ringtone({
     required this.id,
     required this.url,

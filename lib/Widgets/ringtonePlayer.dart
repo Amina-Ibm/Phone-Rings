@@ -3,14 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:phone_rings/Controllers/ringtoneController.dart';
 import 'package:phone_rings/Models/ringtoneModel.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:phone_rings/Widgets/playPauseButton.dart';
 import 'package:get/get.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
 import 'package:http/http.dart' as http;
 import 'package:ionicons/ionicons.dart';
-
 import '../Controllers/wishlistController.dart';
 
 class RingtonePlayer extends StatefulWidget {
@@ -25,31 +22,21 @@ class RingtonePlayer extends StatefulWidget {
 }
 
 class _RingtonePlayerState extends State<RingtonePlayer> {
-  // Controller from your state management (GetX)
   RingtoneController ringtoneController = Get.put(RingtoneController());
   final WishlistController wishlistController = Get.find<WishlistController>();
-
-  // AudioPlayer instance for playback.
   late AudioPlayer audioPlayer;
-  // PlayerController for waveform visualization.
 
   bool isFavourite = false;
   bool isPlaying = false;
-  bool isAudioLoading = true;     // For the AudioPlayer
-  // For waveform extraction
+  bool isAudioLoading = true;
 
   @override
   void initState() {
     super.initState();
     audioPlayer = AudioPlayer();
-
-
-    // Load audio for playback.
     loadAudio();
-    // Download and prepare the audio file for waveform extraction.
   }
 
-  /// Loads the audio URL into the AudioPlayer.
   Future<void> loadAudio() async {
     try {
       await audioPlayer.setUrl(widget.ringtone.previews['preview-hq-mp3']!);
@@ -75,7 +62,6 @@ class _RingtonePlayerState extends State<RingtonePlayer> {
         print(jsonData);
         if (jsonData.containsKey("lowlevel") && jsonData["lowlevel"].containsKey("spectral_rms")){
           final List<dynamic> rawSamples = jsonData["lowlevel"]["spectral_rms"];
-          // Convert each value to double (and consider scaling/normalization if needed)
           List<double> samples = rawSamples.map((e) => (e as num).toDouble()).toList();
           return samples;
         }
@@ -195,12 +181,15 @@ class _RingtonePlayerState extends State<RingtonePlayer> {
                       stream: audioPlayer.positionStream,
                       builder: (context, posSnapshot) {
                         Duration elapsed = posSnapshot.data ?? Duration.zero;
-                        // In a real scenario, you might obtain the true duration.
-                        // For this example, we assume a fixed maxDuration.
-                        Duration maxDuration = Duration( seconds:  widget.ringtone.duration.toInt());
-                        return CurvedPolygonWaveform(
+                        Duration maxDuration = Duration(seconds: widget.ringtone.duration.toInt());
 
-                          activeColor: Color(0xFF572177),
+                        // Ensure elapsedDuration does not exceed maxDuration
+                        if (elapsed > maxDuration) {
+                          elapsed = maxDuration;
+                        }
+
+                        return CurvedPolygonWaveform(
+                          activeColor: const Color(0xFF572177),
                           maxDuration: maxDuration,
                           elapsedDuration: elapsed,
                           samples: normalizedSamples,
@@ -209,6 +198,7 @@ class _RingtonePlayerState extends State<RingtonePlayer> {
                         );
                       },
                     );
+
                   },
                 ),
 
@@ -216,22 +206,30 @@ class _RingtonePlayerState extends State<RingtonePlayer> {
                 // Download Button
                 Row(
                   children: [
-                    InkWell(
+                     InkWell(
                       child: const Icon(
                         Icons.install_mobile_sharp,
                         size: 28,
                         color: Color(0xFF521f64),
                       ),
                       onTap: () async {
+
+                        ringtoneController.downloadProgress.value = 0.0;
                         await ringtoneController.downloadRingtone(
                           widget.ringtone.downloadUrl,
                           widget.ringtone.name,
                           widget.ringtone.id,
                         );
-                        Navigator.pop(context);
+                        setState(() {
+                          widget.ringtone.isDownloaded = true;
+                        });
+                        //widget.ringtone.isDownloaded = true;
+                        //Navigator.pop(context);
                       },
                     ),
-                    SizedBox(width: 20,),
+
+
+                    SizedBox(width: 15,),
                     InkWell(
                       child: wishlistController.isInWishlist(widget.ringtone) ?  const Icon(
                         Ionicons.heart,
@@ -249,7 +247,23 @@ class _RingtonePlayerState extends State<RingtonePlayer> {
                         });
                       },
                     ),
-                  ],
+                  const SizedBox(width: 10,),
+                  Expanded(
+                  child: Obx(() {
+                  return ringtoneController.downloadProgress.value > 0 &&
+                  ringtoneController.downloadProgress.value < 1
+                  ? LinearProgressIndicator(
+                    value: ringtoneController.downloadProgress.value,
+                    backgroundColor: Colors.grey[300],
+                    color: Color(0xFF521f64),
+                    minHeight: 5,
+                  )
+                  : SizedBox();
+    }
+                  )
+                  )
+
+    ],
                 ),
               ],
             ),

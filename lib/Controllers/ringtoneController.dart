@@ -14,6 +14,7 @@ import 'package:path_provider/path_provider.dart';
 class RingtoneController extends GetxController {
   var isLoading = false.obs;
   var ringtones = <Ringtone>[].obs;
+  var downloadProgress = 0.0.obs;
   var authorizationCode = '';
   var accessToken = '';
   final String apiKey = "lOMmS3wRHdF8yMwmv7I3O0qdYT8s6JpS3hiU3esO";
@@ -39,7 +40,6 @@ class RingtoneController extends GetxController {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonData = json.decode(response.body);
-        print(jsonData);
         final List<Ringtone> fetchedRingtones = (jsonData['results'] as List)
             .map((item) => Ringtone.fromJson(item))
             .toList();
@@ -92,21 +92,12 @@ class RingtoneController extends GetxController {
           headers: headers
       );
       final dio = Dio(BaseOptions(headers: headers));
-      toastification.show(
-        type: ToastificationType.info,
-        style: ToastificationStyle.fillColored,
-        title: Text("Download in Progress"),
-        alignment: Alignment.bottomCenter,
-        autoCloseDuration: const Duration(seconds: 4),
-        primaryColor: Color(0xffffffff),
-        backgroundColor: Color(0xffffffff),
-        foregroundColor: Color(0xff521f64),
-      );
       await dio.download(
         downloadUrl,
         savePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
+            downloadProgress.value = received / total;
             print("Download progress: ${(received / total * 100).toStringAsFixed(0)}%");
           }
         },
@@ -118,7 +109,7 @@ class RingtoneController extends GetxController {
         style: ToastificationStyle.fillColored,
         title: Text("Ringtone Downloaded Successfully!"),
         alignment: Alignment.bottomCenter,
-        autoCloseDuration: const Duration(seconds: 4),
+        autoCloseDuration: const Duration(seconds: 3),
         primaryColor: Color(0xffffffff),
         backgroundColor: Color(0xffffffff),
         foregroundColor: Color(0xff521f64),

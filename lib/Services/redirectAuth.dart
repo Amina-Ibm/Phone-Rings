@@ -12,7 +12,6 @@ class RedirectAuthHandler {
   void initRedirectListener(BuildContext context, AppLinks appLinks) {
     appLinks.uriLinkStream.listen((Uri? uri) async {
       if (uri != null) {
-        ///String url = uri.toString();
         print("Raw URI String: ${uri.toString()}");
         print("Query Parameters: ${uri.query}");
 
