@@ -1,16 +1,10 @@
 # phone_rings
 
-A new Flutter project.
+A flutter project made using Freesound API. Search for ringtones, Browse Trending Categories, Add ringtones to Favourites and Download ringtones through Oauth.
 
-## Getting Started
+## Video Demo
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+https://github.com/user-attachments/assets/132dd84d-58d3-4040-bdcf-c2d5707cba29
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
