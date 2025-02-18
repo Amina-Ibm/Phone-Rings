@@ -32,6 +32,21 @@ Run the app:
 
 ``` flutter run ```
 
+## Screenshots 
+
+![WhatsApp Image 2025-02-18 at 8 57 01 AM](https://github.com/user-attachments/assets/6b571fce-6f97-4d27-8e2f-df099d4ddd1f)
+
+![WhatsApp Image 2025-02-18 at 8 57 02 AM](https://github.com/user-attachments/assets/8fc323e3-09a1-41f0-bffb-2be6bbd7929d)
+
+![WhatsApp Image 2025-02-18 at 8 57 03 AM](https://github.com/user-attachments/assets/97bf5004-fff1-4479-9c35-50f274f2c86d)
+
+![WhatsApp Image 2025-02-18 at 8 57 03 AM (1)](https://github.com/user-attachments/assets/40864a2c-cf08-4c7f-9f4e-b13ce6e80193)
+
+![WhatsApp Image 2025-02-18 at 8 57 03 AM (2)](https://github.com/user-attachments/assets/c344c42d-dca5-4844-baba-b78806ee2165)
+
+![WhatsApp Image 2025-02-18 at 8 57 04 AM](https://github.com/user-attachments/assets/eb7c1f1b-2372-4bdf-8aad-cbb4ed9f2f3f)
+
+
 ## Video Demo
 
 
